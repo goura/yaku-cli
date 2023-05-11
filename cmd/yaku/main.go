@@ -56,17 +56,6 @@ func main() {
 				return fmt.Errorf("Couldn't parse lang:%s", targetLangID)
 			}
 
-			// Instanciate a translator with the specified engine
-			var instance translator.TranslatorInstance
-			switch engineTag {
-			case "dummyfortest":
-				instance = translator.NewDummyTranslator()
-			case "deepl":
-				instance = translator.NewDeepLTranslator()
-			default:
-				return fmt.Errorf("engine:%s is not supported", engineTag)
-			}
-
 			// Read stdin
 			src := ""
 			for {
@@ -77,6 +66,12 @@ func main() {
 				if s == "" {
 					break
 				}
+			}
+
+			// Instanciate a translator with the specified engine
+			instance, err := translator.BuildTranslator(engineTag)
+			if err != nil {
+				return err
 			}
 
 			// Execute translation

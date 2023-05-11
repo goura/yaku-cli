@@ -12,7 +12,7 @@ type DummyEngine struct {
 }
 
 func (t DummyEngine) Name() string {
-	return "dummy_engine"
+	return "dummyfortest"
 }
 
 func (t DummyEngine) LoadConfig(conf config.Config) error {

@@ -16,7 +16,7 @@ type DeepLEngine struct {
 }
 
 func (t DeepLEngine) Name() string {
-	return "deepl_engine"
+	return "deepl"
 }
 
 func (t *DeepLEngine) LoadConfig(conf config.Config) error {
@@ -28,7 +28,7 @@ func (t *DeepLEngine) LoadConfig(conf config.Config) error {
 }
 
 func (t DeepLEngine) IsSourceSizeOK(src string) bool {
-	// TODO: what to do
+	// TODO: improve
 	if len(src) > 1024*127 {
 		return false
 	}
@@ -82,8 +82,13 @@ func (t DeepLEngine) callDeepLAPI(ctx context.Context, sourceLanguage deepl.Sour
 		},
 	)
 
-	// TODO: Let the endpoint change
-	cli, err := deepl.NewClientWithResponses("https://api.deepl.com/v2/", addAuthHdrFn)
+	// Make a request
+	serverURL := "https://api.deepl.com/v2/"
+	if t.ServerURL != "" {
+		serverURL = t.ServerURL
+	}
+
+	cli, err := deepl.NewClientWithResponses(serverURL, addAuthHdrFn)
 	if err != nil {
 		return "", err
 	}
