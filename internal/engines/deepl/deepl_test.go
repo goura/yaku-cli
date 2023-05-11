@@ -70,6 +70,8 @@ func TestSetEndpoint(t *testing.T) {
 
 	// SetEndpoint works
 	url := "https://example.com/v2/translate"
-	engine.SetEndpoint(url)
+	if err := engine.SetEndpoint(url); err != nil {
+		t.Error(err)
+	}
 	assert.Equal(t, url, engine.ServerURL)
 }

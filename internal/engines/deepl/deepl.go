@@ -29,10 +29,7 @@ func (t *DeepLEngine) LoadConfig(conf config.Config) error {
 
 func (t DeepLEngine) IsSourceSizeOK(src string) bool {
 	// TODO: improve
-	if len(src) > 1024*127 {
-		return false
-	}
-	return true
+	return len(src) <= 1024*127
 }
 
 func (t DeepLEngine) SupportedSourceLanguages() []language.Tag {

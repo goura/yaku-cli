@@ -16,6 +16,9 @@ func TestBuildTranslatorOK(t *testing.T) {
 	ctx := context.Background()
 	conf := config.Config{DummyAPIKey: "a"}
 	s, err := instance.DoTranslation(ctx, conf, language.AmericanEnglish, language.Japanese, "Hello!")
+	if err != nil {
+		t.Error(err)
+	}
 
 	assert.Equal(t, "こんにちは！", s)
 }

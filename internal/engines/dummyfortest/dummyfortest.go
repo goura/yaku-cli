@@ -25,10 +25,7 @@ func (t DummyEngine) LoadConfig(conf config.Config) error {
 
 // This implementation can only translate a source shorter than 100 chars
 func (t DummyEngine) IsSourceSizeOK(src string) bool {
-	if len(src) > 100 {
-		return false
-	}
-	return true
+	return len(src) <= 100
 }
 
 // This implementation only supports American/British English and Japanese
