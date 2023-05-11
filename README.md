@@ -1,1 +1,2 @@
-# translate-cli
+# yaku-cli
+
