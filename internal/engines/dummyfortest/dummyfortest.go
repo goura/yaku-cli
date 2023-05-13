@@ -29,19 +29,19 @@ func (t DummyEngine) IsSourceSizeOK(src string) bool {
 }
 
 // This implementation only supports American/British English and Japanese
-func (t DummyEngine) SupportedSourceLanguages() []language.Tag {
-	return []language.Tag{language.AmericanEnglish, language.BritishEnglish, language.Japanese}
+func (t DummyEngine) SupportedSourceLanguages() ([]language.Tag, error) {
+	return []language.Tag{language.AmericanEnglish, language.BritishEnglish, language.Japanese}, nil
 }
 
 // This implementation only supports certain combination
-func (t DummyEngine) SupportedTargetLanguages(srcLang language.Tag) []language.Tag {
+func (t DummyEngine) SupportedTargetLanguages(srcLang language.Tag) ([]language.Tag, error) {
 	if srcLang == language.AmericanEnglish || srcLang == language.BritishEnglish {
-		return []language.Tag{language.Japanese}
+		return []language.Tag{language.Japanese}, nil
 	}
 	if srcLang == language.Japanese {
-		return []language.Tag{language.AmericanEnglish, language.BritishEnglish}
+		return []language.Tag{language.AmericanEnglish, language.BritishEnglish}, nil
 	}
-	return []language.Tag{}
+	return []language.Tag{}, nil
 }
 
 func (t DummyEngine) Translate(ctx context.Context, srcLang language.Tag, tgtLang language.Tag, src string) (string, error) {

@@ -15,11 +15,11 @@ type TranslationEngine interface {
 	LoadConfig(conf config.Config) error
 
 	// Return supported source languages supported by the module
-	SupportedSourceLanguages() []language.Tag
+	SupportedSourceLanguages() ([]language.Tag, error)
 
 	// Return supported target languages supported by the module,
 	// for a given source language
-	SupportedTargetLanguages(srcLang language.Tag) []language.Tag
+	SupportedTargetLanguages(srcLang language.Tag) ([]language.Tag, error)
 
 	// Check if the source string is within the size limit
 	IsSourceSizeOK(src string) bool

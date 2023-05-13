@@ -2,6 +2,7 @@ package translator
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/goura/yaku-cli/pkg/config"
@@ -25,11 +26,21 @@ func (t TranslatorInstance) DoTranslation(ctx context.Context, conf config.Confi
 		return "", fmt.Errorf("engine:%s source string is too long", name)
 	}
 
-	if !funk.Contains(t.engine.SupportedSourceLanguages(), srcLang) {
+	srcLangTags, err := t.engine.SupportedSourceLanguages()
+	if errors.Is(err, types.FeatureNotSupportedError) {
+		// pass
+	} else if err != nil {
+		return "", fmt.Errorf("engine:%s error while checking source language", err)
+	} else if !funk.Contains(srcLangTags, srcLang) {
 		return "", fmt.Errorf("engine:%s doesn't support %v as source language", name, srcLang)
 	}
 
-	if !funk.Contains(t.engine.SupportedTargetLanguages(srcLang), tgtLang) {
+	tgtLangTags, err := t.engine.SupportedTargetLanguages(srcLang)
+	if errors.Is(err, types.FeatureNotSupportedError) {
+		// pass
+	} else if err != nil {
+		return "", fmt.Errorf("engine:%s error while checking target language", err)
+	} else if !funk.Contains(tgtLangTags, tgtLang) {
 		return "", fmt.Errorf("translating source:%v to target:%v is not supported by %s", srcLang, tgtLang, name)
 	}
 

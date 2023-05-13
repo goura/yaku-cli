@@ -10,6 +10,7 @@ type Config struct {
 	Debug        bool
 	DummyAPIKey  string `split_words:"true"`
 	DeeplAuthKey string `split_words:"true"` //We don't want DEEP_L so we use Deepl
+	OpenaiApiKey string `split_words:"true"` //We don't want Open_AI so we use Openai
 }
 
 func NewEnvConfig() Config {

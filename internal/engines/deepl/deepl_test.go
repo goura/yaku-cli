@@ -45,7 +45,8 @@ func TestIsSizeOK(t *testing.T) {
 func TestSupportedSourceLanguages(t *testing.T) {
 	engine := DeepLEngine{}
 
-	langs := engine.SupportedSourceLanguages()
+	langs, err := engine.SupportedSourceLanguages()
+	assert.NoError(t, err)
 
 	// Test some languages with fallback
 	assert.True(t, funk.Contains(langs, language.English))
@@ -57,7 +58,8 @@ func TestSupportedSourceLanguages(t *testing.T) {
 func TestSupportedTargetLanguages(t *testing.T) {
 	engine := DeepLEngine{}
 
-	langs := engine.SupportedTargetLanguages(language.AmericanEnglish)
+	langs, err := engine.SupportedTargetLanguages(language.AmericanEnglish)
+	assert.NoError(t, err)
 
 	// Test some languages with fallback
 	assert.True(t, funk.Contains(langs, language.English))
