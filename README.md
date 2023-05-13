@@ -35,7 +35,7 @@ OpenAI (much experimental)
 ```bash
 % export YAKU_OPENAI_API_KEY="<YOUR_OPENAI_API_KEY>"
 
-% echo "Saya tidak mau bekerja, tapi saya mau uang" | go run cmd/yaku/main.go -e openai -s id -t ja
+% echo "Saya tidak mau bekerja, tapi saya mau uang" | yaku -e openai -s id -t ja
 私は働きたくないですが、お金が欲しいです。
 ```
 
