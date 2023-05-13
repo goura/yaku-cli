@@ -1,0 +1,10 @@
+--- openapi.yaml	2023-05-13 18:27:40
++++ openai-openapi-patched.yaml	2023-05-13 18:29:06
+@@ -214,6 +214,7 @@
+       operationId: createChatCompletion
+       tags:
+       - OpenAI
++      - ChatCompletion
+       summary: Creates a completion for the chat message
+       requestBody:
+         required: true

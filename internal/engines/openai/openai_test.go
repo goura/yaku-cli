@@ -1,16 +1,16 @@
-package deepl
+package openai
 
 import (
 	"testing"
 
 	"github.com/goura/yaku-cli/pkg/config"
+	"github.com/goura/yaku-cli/pkg/types"
 	"github.com/stretchr/testify/assert"
-	"github.com/thoas/go-funk"
 	"golang.org/x/text/language"
 )
 
 func TestLoadConfig(t *testing.T) {
-	engine := DeepLEngine{}
+	engine := OpenAIChatCompletionEngine{}
 
 	// Empty config should fail
 	empty_conf := config.Config{}
@@ -18,13 +18,13 @@ func TestLoadConfig(t *testing.T) {
 	assert.Error(t, err)
 
 	// OK case
-	conf := config.Config{DeeplAuthKey: "a"}
+	conf := config.Config{OpenaiApiKey: "a"}
 	err = engine.LoadConfig(conf)
 	assert.NoError(t, err)
 }
 
 func TestIsSizeOK(t *testing.T) {
-	engine := DeepLEngine{}
+	engine := OpenAIChatCompletionEngine{}
 
 	var isOkay bool
 
@@ -43,32 +43,21 @@ func TestIsSizeOK(t *testing.T) {
 }
 
 func TestSupportedSourceLanguages(t *testing.T) {
-	engine := DeepLEngine{}
+	engine := OpenAIChatCompletionEngine{}
 
-	langs, err := engine.SupportedSourceLanguages()
-	assert.NoError(t, err)
-
-	// Test some languages with fallback
-	assert.True(t, funk.Contains(langs, language.English))
-	assert.True(t, funk.Contains(langs, language.Portuguese))
-	assert.True(t, funk.Contains(langs, language.AmericanEnglish))
-	assert.True(t, funk.Contains(langs, language.BritishEnglish))
+	_, err := engine.SupportedSourceLanguages()
+	assert.ErrorIsf(t, err, types.FeatureNotSupportedError, "Returns FeatureNotSupportedError")
 }
 
 func TestSupportedTargetLanguages(t *testing.T) {
-	engine := DeepLEngine{}
+	engine := OpenAIChatCompletionEngine{}
 
-	langs, err := engine.SupportedTargetLanguages(language.AmericanEnglish)
-	assert.NoError(t, err)
-
-	// Test some languages with fallback
-	assert.True(t, funk.Contains(langs, language.English))
-	assert.True(t, funk.Contains(langs, language.Portuguese))
-	assert.True(t, funk.Contains(langs, language.EuropeanPortuguese))
+	_, err := engine.SupportedTargetLanguages(language.AmericanEnglish)
+	assert.ErrorIsf(t, err, types.FeatureNotSupportedError, "Returns FeatureNotSupportedError")
 }
 
 func TestSetEndpoint(t *testing.T) {
-	engine := DeepLEngine{}
+	engine := OpenAIChatCompletionEngine{}
 
 	// SetEndpoint works
 	url := "https://example.com/v2/translate"

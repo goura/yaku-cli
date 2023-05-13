@@ -32,12 +32,12 @@ func (t DeepLEngine) IsSourceSizeOK(src string) bool {
 	return len(src) <= 1024*127
 }
 
-func (t DeepLEngine) SupportedSourceLanguages() []language.Tag {
-	return supportedSourceLanguages()
+func (t DeepLEngine) SupportedSourceLanguages() ([]language.Tag, error) {
+	return supportedSourceLanguages(), nil
 }
 
-func (t DeepLEngine) SupportedTargetLanguages(srcLang language.Tag) []language.Tag {
-	return supportedTargetLanguages()
+func (t DeepLEngine) SupportedTargetLanguages(srcLang language.Tag) ([]language.Tag, error) {
+	return supportedTargetLanguages(), nil
 }
 
 func (t DeepLEngine) Translate(ctx context.Context, srcLang language.Tag, tgtLang language.Tag, src string) (string, error) {

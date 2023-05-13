@@ -5,6 +5,7 @@ import (
 
 	"github.com/goura/yaku-cli/internal/engines/deepl"
 	"github.com/goura/yaku-cli/internal/engines/dummyfortest"
+	"github.com/goura/yaku-cli/internal/engines/openai"
 )
 
 func NewDummyTranslator() TranslatorInstance {
@@ -17,6 +18,11 @@ func NewDeepLTranslator() TranslatorInstance {
 	return NewTranslator(&engine)
 }
 
+func NewOpenAITranslator() TranslatorInstance {
+	engine := openai.OpenAIChatCompletionEngine{}
+	return NewTranslator(&engine)
+}
+
 func BuildTranslator(engineTag string) (instance TranslatorInstance, err error) {
 	// Instanciate a translator with the specified engine
 	switch engineTag {
@@ -24,6 +30,8 @@ func BuildTranslator(engineTag string) (instance TranslatorInstance, err error) 
 		instance = NewDummyTranslator()
 	case "deepl":
 		instance = NewDeepLTranslator()
+	case "openai":
+		instance = NewOpenAITranslator()
 	default:
 		return instance, fmt.Errorf("engine:%s is not supported", engineTag)
 	}
