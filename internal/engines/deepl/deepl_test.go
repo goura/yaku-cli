@@ -132,6 +132,7 @@ func TestCallDeepLAPI(t *testing.T) {
 
 	// Create an expected response
 	expectedResponse, err := buildTranslateTextExpectedResponse(200, "EN", "世界、こんにちは！")
+	assert.NoError(t, err)
 
 	// Set up the expected behavior of the mock client
 	mockClient.On("TranslateTextWithFormdataBodyWithResponse", mock.Anything, mock.Anything, mock.Anything).Return(expectedResponse, nil)
