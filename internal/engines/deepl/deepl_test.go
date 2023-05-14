@@ -1,10 +1,15 @@
 package deepl
 
 import (
+	"context"
+	"encoding/json"
+	"net/http"
 	"testing"
 
+	"github.com/goura/yaku-cli/internal/ext/gen/deepl"
 	"github.com/goura/yaku-cli/pkg/config"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
 	"github.com/thoas/go-funk"
 	"golang.org/x/text/language"
 )
@@ -76,4 +81,76 @@ func TestSetEndpoint(t *testing.T) {
 		t.Error(err)
 	}
 	assert.Equal(t, url, engine.ServerURL)
+}
+
+// MockClient is a mock implementation of the deepl.Client interface
+type MockClient struct {
+	mock.Mock
+}
+
+// TranslateTextWithFormdataBodyWithResponse is a mock implementation of the deepl.Client.TranslateTextWithFormdataBodyWithResponse method
+func (m *MockClient) TranslateTextWithFormdataBodyWithResponse(ctx context.Context, body deepl.TranslateTextFormdataRequestBody, reqEditors ...deepl.RequestEditorFn) (*deepl.TranslateTextResponse, error) {
+	args := m.Called(ctx, body, reqEditors)
+	return args.Get(0).(*deepl.TranslateTextResponse), args.Error(1)
+}
+
+func buildTranslateTextExpectedResponse(statusCode int, detectedLanguage string, text string) (*deepl.TranslateTextResponse, error) {
+	apiResp := deepl.TranslateTextResponse{}
+
+	bodyBytes := []byte(`{"translations":[{"detected_source_language":"` + detectedLanguage + `","text":"` + text + `"}]}`)
+
+	var dest struct {
+		Translations *[]struct {
+			DetectedSourceLanguage *deepl.SourceLanguage `json:"detected_source_language,omitempty"`
+
+			Text *string `json:"text,omitempty"`
+		} `json:"translations,omitempty"`
+	}
+
+	if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+		return &apiResp, err
+	}
+
+	apiResp.HTTPResponse = &http.Response{
+		StatusCode: statusCode,
+	}
+	apiResp.JSON200 = &dest
+	apiResp.Body = []byte{}
+
+	return &apiResp, nil
+}
+
+func TestCallDeepLAPI(t *testing.T) {
+	// Create an instance of the DeepLEngine
+	engine := DeepLEngine{
+		deepLAuthKey: "your-auth-key",
+		ServerURL:    "https://api.deepl.com/v2/",
+	}
+
+	// Create a mock client
+	mockClient := new(MockClient)
+
+	// Create an expected response
+	expectedResponse, err := buildTranslateTextExpectedResponse(200, "EN", "世界、こんにちは！")
+	assert.NoError(t, err)
+
+	// Set up the expected behavior of the mock client
+	mockClient.On("TranslateTextWithFormdataBodyWithResponse", mock.Anything, mock.Anything, mock.Anything).Return(expectedResponse, nil)
+
+	// Replace the actual client with the mock client
+	engine.cli = mockClient
+
+	// Define the test case inputs
+	sourceLanguage := deepl.SourceLanguage("en")
+	targetLanguage := deepl.TargetLanguage("ja")
+	textItem := "Hello, world!"
+
+	// Call the function being tested
+	result, err := engine.callDeepLAPI(context.Background(), sourceLanguage, targetLanguage, textItem)
+
+	// Assert the expected behavior
+	assert.NoError(t, err)
+
+	// Assert the expected translation result
+	assert.Equal(t, "世界、こんにちは！", result)
 }

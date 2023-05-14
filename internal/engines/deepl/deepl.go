@@ -10,9 +10,14 @@ import (
 	"golang.org/x/text/language"
 )
 
+type DeepLAPIClient interface {
+	TranslateTextWithFormdataBodyWithResponse(ctx context.Context, body deepl.TranslateTextFormdataRequestBody, reqEditors ...deepl.RequestEditorFn) (*deepl.TranslateTextResponse, error)
+}
+
 type DeepLEngine struct {
 	ServerURL    string
 	deepLAuthKey string
+	cli          DeepLAPIClient // Mostly for testing
 }
 
 func (t DeepLEngine) Name() string {
@@ -90,7 +95,12 @@ func (t DeepLEngine) callDeepLAPI(ctx context.Context, sourceLanguage deepl.Sour
 		return "", err
 	}
 
-	apiResp, err := cli.TranslateTextWithFormdataBodyWithResponse(ctx, deepl.TranslateTextFormdataRequestBody(apiReqBody))
+	// Use the already set cli if it's already set (for testing)
+	if t.cli == nil {
+		t.cli = cli
+	}
+
+	apiResp, err := t.cli.TranslateTextWithFormdataBodyWithResponse(ctx, deepl.TranslateTextFormdataRequestBody(apiReqBody))
 	if err != nil {
 		return "", err
 	}
