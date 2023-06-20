@@ -11,10 +11,6 @@ import (
 	"golang.org/x/text/language"
 )
 
-// - You are a translator API from ja to en-GB. Reply in JSON like {"result": "...."}
-// - We want to process your reply with a program so pls reply only JSON
-// - {"translate_request": "エレベーターはどこですか？"}
-
 type OpenAIChatCompletionEngine struct {
 	ServerURL    string
 	openAIAPIKey string

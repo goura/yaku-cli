@@ -19,7 +19,7 @@ DISCLAIMER: YOU MIGHT BE BILLED THAN YOU ARE EXPECTED. READ THE LICENSE AND UNDE
 ```bash
 go install github.com/goura/yaku-cli/cmd/yaku@latest
 ```
-`yaku` will be installed under your GOPATH/bin (`go env GOPATH` if you want the path).
+`yaku` will be installed under your GOBIN (`go env GOBIN` if you want the path).
 
 ## Usage
 
